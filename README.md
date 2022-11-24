@@ -4,7 +4,7 @@
 
 You should have PyInstaller installed in your computer alongside with of course Python.
 
-## `pip install pyinstaller
+## `pip install pyinstaller`
 
 ## Running the Application
 
