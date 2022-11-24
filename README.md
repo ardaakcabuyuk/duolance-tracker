@@ -15,6 +15,7 @@ You may also see any lint errors in the console.
 
 Runs the app in the production mode.
 
+
 ## Building the Application
 
 To build the application, one should first build the screenshot service.
