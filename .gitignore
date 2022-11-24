@@ -10,13 +10,20 @@
 
 # production
 /build
+/capture_service/build  
+
+# distribution
+/dist
+/capture_service/dist
 
 # misc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env
+.env.dev
+/capture_service/capture.spec
+
+# vscode
+.vscode
 
 npm-debug.log*
 yarn-debug.log*

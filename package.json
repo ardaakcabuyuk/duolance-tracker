@@ -1,21 +1,85 @@
 {
-  "name": "mactracker",
+  "name": "duolancetracker",
+  "author": {
+    "name": "Arda Akca Buyuk",
+    "email": "ardaakcabuyuk@gmail.com"
+  },
+  "description": "A tracker for the DuoLance website",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "bootstrap": "^5.2.2",
+    "concurrently": "^7.5.0",
+    "cross-env": "^7.0.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.8",
+    "node-mac-permissions": "^2.2.1",
+    "python-shell": "^3.0.1",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.6.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react-loading-screen": "^0.0.17",
+    "react-router-dom": "^6.4.3",
+    "react-scripts": "4.0.3",
+    "react-select": "^5.6.1",
+    "wait-on": "^6.0.1",
     "web-vitals": "^2.1.4"
   },
+  "main": "public/electron.js",
+  "homepage": ".",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "electron-start": "wait-on tcp:3000 && electron .",
+    "electron-build": "electron-builder",
+    "build": "npm run react-build && npm run electron-build",
+    "start": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm run electron-start\"",
+    "start:dev": "concurrently -k \"env-cmd -f .env.dev cross-env BROWSER=none react-scripts start\" \"npm run electron-start\""
+  },
+  "build": {
+    "appId": "duolancetracker",
+    "productName": "Duolance Tracker",
+    "extends": null,
+    "files": [
+      "package.json",
+      "*.js",
+      "build",
+      "src/**/*",
+      "public/**/*",
+      "capture_service",
+      "node_modules"
+    ],
+    "asarUnpack": [
+      "capture_service"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/duolance.ico"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +98,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^21.3.0",
+    "electron-builder": "^23.6.0",
+    "env-cmd": "^10.1.0"
   }
 }
