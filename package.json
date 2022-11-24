@@ -32,11 +32,10 @@
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
-    "react-test": "react-scripts test",
-    "react-eject": "react-scripts eject",
     "electron-start": "wait-on tcp:3000 && electron .",
     "electron-build": "electron-builder",
-    "build": "npm run react-build && npm run electron-build",
+    "build": "npm run build-python && npm run react-build && npm run electron-build",
+    "build-python": "cd capture_service && python3 -m PyInstaller capture.py",
     "start": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm run electron-start\"",
     "start:dev": "concurrently -k \"env-cmd -f .env.dev cross-env BROWSER=none react-scripts start\" \"npm run electron-start\""
   },
