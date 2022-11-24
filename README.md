@@ -2,7 +2,7 @@
 
 ## Requirements
 
-You should have PyInstaller installed in your computer alongside with of course Python.
+You should have PyInstaller installed in your computer, of course, alongside with Python.
 
 ## `pip install pyinstaller`
 
