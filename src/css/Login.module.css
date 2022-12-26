@@ -168,3 +168,16 @@
 	font-size: 12px;
 }
 
+.version {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	margin-bottom: 0 !important;
+	padding-right: 5px;
+	color: #fff;
+}
+
+.hidden {
+	display: none;
+}
+
