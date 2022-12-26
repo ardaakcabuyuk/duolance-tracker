@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -13,10 +13,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [version, setVersion] = useState("");
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
+
+  useEffect(() => {
+    window.version_api.requestVersion()
+    .then(function (response) {
+      console.log(response)
+      setVersion(response);
+    });
+  }, []);
 
   function login(event) {
     event.preventDefault();
@@ -79,6 +88,7 @@ export default function Login() {
               <FontAwesomeIcon icon={faChevronRight} className={styles.button__icon} />
             </Button>
           </Form> 
+          <p id="version" className={styles.version}>v{version}</p>
         </div>
         <div className={styles.screen__background}>
           <span className={`${styles.screen__background__shape} ${styles.screen__background__shape3}`}></span>		

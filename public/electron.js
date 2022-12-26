@@ -1,17 +1,15 @@
-const {app, BrowserWindow, ipcMain, desktopCapturer} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev');
-const {PythonShell} = require('python-shell');
-const {getAuthStatus, askForScreenCaptureAccess} = require('node-mac-permissions');
+const { autoUpdater } = require('electron-updater');
 const child = require('child_process').execFile;
 const captureExecCwd = isDev ?
     path.join(__dirname, '../capture_service/dist/capture'):
     path.join(__dirname, '../../app.asar.unpacked/capture_service/dist/capture');
 
-const captureExecPath = path.join(captureExecCwd, 'capture');
-    
-
-const isMac = process.platform === 'darwin'
+const isMac = process.platform === 'darwin';
+const captureExecPath = isMac ? path.join(captureExecCwd, 'capture'): path.join(captureExecCwd, 'capture.exe');
+autoUpdater.checkForUpdatesAndNotify();
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -38,6 +36,7 @@ function createWindow() {
 app.on('ready', function() {
     createWindow();
     if (isMac) {
+        const {getAuthStatus, askForScreenCaptureAccess} = require('node-mac-permissions');
         const screenPermission = getAuthStatus('screen');
         console.log(screenPermission);
         if (screenPermission === 'not-determined' || screenPermission === 'denied') {
@@ -53,6 +52,10 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
 })
+
+ipcMain.handle('version:request_version', (event) => {
+	return app.getVersion();
+});
 
 ipcMain.handle('screenshot:capture', async(e, value) => {
     const parameters = [Date.now().toString()];
@@ -75,20 +78,6 @@ ipcMain.handle('screenshot:capture', async(e, value) => {
         }); 
     });
     
-    // const promise = new Promise((resolve, reject) => {
-    //     PythonShell.run('capture.py', {
-    //         scriptPath:
-    //         (isDev
-    //         ? path.join(__dirname, '../src/capture_service') :
-    //         path.join(__dirname, '../src/capture_service').replace('app.asar', 'app.asar.unpacked')),
-    //         args: [value]
-    //     }, function (err, response) {
-    //         if (err) reject(err);
-    //         console.log('finished');
-    //         console.log(response);
-    //         resolve(JSON.parse(response));
-    //     });
-    // });
     const result = await promise;
     return result;
 });
