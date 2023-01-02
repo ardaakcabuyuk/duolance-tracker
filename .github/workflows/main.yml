@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: release
+    runs-on: macos-latest
+    env: 
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+    
+      - name: setup_node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          
+      - name: setup_python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+          
+      - name: install_pyinstaller
+        run: pip install pyinstaller
+        
+      - name: install_dependencies
+        run: npm install
+        
+      - name: deploy_release
+        run: CI=false npm run deploy
+        
+      
+      
