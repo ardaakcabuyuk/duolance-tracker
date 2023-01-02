@@ -4,8 +4,8 @@
     "name": "Arda Akca Buyuk",
     "email": "ardaakcabuyuk@gmail.com"
   },
-  "description": "A tracker for the DuoLance website",
-  "version": "1.0.4",
+  "description": "A tracker for the Duolance website",
+  "version": "1.0.5",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
