@@ -28,7 +28,6 @@ jobs:
         
       - name: install_dependencies
         run: npm install
-          | npm i dmg-license
         
       - name: deploy_release
         run: CI=false npm run deploy
