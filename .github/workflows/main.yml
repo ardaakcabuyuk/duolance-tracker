@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-  
-      - name: setup
     
       - name: setup_node
         uses: actions/setup-node@v3
