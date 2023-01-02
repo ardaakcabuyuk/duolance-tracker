@@ -27,8 +27,8 @@ jobs:
         run: pip install pyinstaller
         
       - name: install_dependencies
-        run: npm i dmg-license
-          | npm install
+        run: npm install
+          | npm i dmg-license
         
       - name: deploy_release
         run: CI=false npm run deploy
