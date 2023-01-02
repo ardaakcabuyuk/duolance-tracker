@@ -8,6 +8,8 @@ jobs:
   release:
     name: release
     runs-on: macos-latest
+    env: 
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     
     steps:
       - name: checkout
