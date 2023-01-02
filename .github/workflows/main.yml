@@ -26,6 +26,9 @@ jobs:
       - name: install_pyinstaller
         run: pip install pyinstaller
         
+      - name: install_dependencies
+        run: npm install
+        
       - name: deploy_release
         run: npm run deploy
         
