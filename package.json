@@ -22,14 +22,14 @@
     "react-dom": "^18.2.0",
     "react-loading-screen": "^0.0.17",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.6.1",
     "wait-on": "^6.0.1",
     "web-vitals": "^2.1.4"
   },
   "optionalDependencies": {
-    "node-mac-permissions": "^2.2.1",
-    "dmg-license": "^1.0.11"
+    "dmg-license": "^1.0.11",
+    "node-mac-permissions": "^2.2.1"
   },
   "main": "public/electron.js",
   "homepage": ".",
@@ -40,6 +40,7 @@
     "electron-build-local": "electron-builder -mw --publish never",
     "electron-build-deploy": "electron-builder -mw --publish always",
     "build": "npm run build-python && npm run react-build && npm run electron-build-local",
+    "build:dev": "env-cmd -f .env.dev npm run build",
     "build-python": "cd capture_service && python3 -m PyInstaller capture.py",
     "deploy": "npm run build-python && npm run react-build && npm run electron-build-deploy",
     "start": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm run electron-start\"",
