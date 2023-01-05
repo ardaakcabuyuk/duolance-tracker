@@ -9,10 +9,12 @@ const Timer = (props) => {
   const [captured, setCaptured] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(null);
 
   function toggle() {
     if (!isActive) {
       props.sessionStarter();
+      setStartTime(Date.now());
     }
 
     setIsActive(!isActive);
@@ -22,6 +24,7 @@ const Timer = (props) => {
     props.sessionEnder();
     setTime(0);
     setIsActive(false);
+    setStartTime(null);
   }
 
   function capture() {
@@ -36,8 +39,8 @@ const Timer = (props) => {
     let interval = null;
     if (isActive) {
       interval = setInterval(() => {
-        setTime((time) => time + 10);
-      }, 10);
+        setTime(Date.now() - startTime);
+      }, 100);
     } else if (!isActive && time !== 0) {
       clearInterval(interval);
     }
@@ -60,8 +63,8 @@ const Timer = (props) => {
     setCaptureTimeSet(true);
   }
 
-  console.log("captureAt", captureAt);
-  console.log("captured", captured);
+  // console.log("captureAt", captureAt);
+  // console.log("captured", captured);
 
   function n(n){
     return n > 9 ? "" + n: "0" + n;
