@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import styles from '../css/Timer.module.css';
 
 const Timer = (props) => {
-  const [captureAt, setCaptureAt] = useState(Math.floor(Math.random() * 9) + 1);   
+  const [captureAt, setCaptureAt] = useState(null);   
   const [captureTimeSet, setCaptureTimeSet] = useState(false);
   const [captured, setCaptured] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -15,6 +15,7 @@ const Timer = (props) => {
     if (!isActive) {
       props.sessionStarter();
       setStartTime(Date.now());
+      setCaptureTimeRandomly();
     }
 
     setIsActive(!isActive);
@@ -24,6 +25,7 @@ const Timer = (props) => {
     props.sessionEnder();
     setTime(0);
     setIsActive(false);
+    setCaptured(false);
     setStartTime(null);
   }
 
@@ -32,7 +34,7 @@ const Timer = (props) => {
   }
 
   function setCaptureTimeRandomly() {
-    setCaptureAt(Math.floor(Math.random() * 10));
+    setCaptureAt(Math.floor(Math.random() * 9) + 1);
   }
 
   useEffect(() => {
@@ -63,8 +65,8 @@ const Timer = (props) => {
     setCaptureTimeSet(true);
   }
 
-  // console.log("captureAt", captureAt);
-  // console.log("captured", captured);
+  console.log("captureAt", captureAt);
+  console.log("captured", captured);
 
   function n(n){
     return n > 9 ? "" + n: "0" + n;
