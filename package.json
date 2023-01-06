@@ -29,6 +29,7 @@
   },
   "optionalDependencies": {
     "dmg-license": "^1.0.11",
+    "electron-notarize": "^1.2.2",
     "node-mac-permissions": "^2.2.1"
   },
   "main": "public/electron.js",
@@ -47,7 +48,7 @@
     "start:dev": "concurrently -k \"env-cmd -f .env.dev cross-env BROWSER=none react-scripts start\" \"npm run electron-start\""
   },
   "build": {
-    "appId": "duolancetracker",
+    "appId": "com.duolance.tracker",
     "productName": "Duolance Tracker",
     "extends": null,
     "files": [
@@ -62,29 +63,18 @@
     "asarUnpack": [
       "capture_service"
     ],
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
     "win": {
       "target": "NSIS",
-      "icon": "build/duolance.ico"
+      "icon": "build/icon.ico"
+    },
+    "afterSign": "build/sign/notarize.js",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.icns"
     }
   },
   "eslintConfig": {
