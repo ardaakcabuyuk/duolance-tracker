@@ -4,15 +4,18 @@ import { Button } from 'react-bootstrap';
 import styles from '../css/Timer.module.css';
 
 const Timer = (props) => {
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [hours, setHours] = useState(0);   
-  const [captureAt, setCaptureAt] = useState(Math.floor(Math.random() * 10));   
+  const [captureAt, setCaptureAt] = useState(null);   
+  const [captureTimeSet, setCaptureTimeSet] = useState(false);
+  const [captured, setCaptured] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(null);
 
   function toggle() {
-    if (!isActive && !seconds && !minutes && !hours) {
+    if (!isActive) {
       props.sessionStarter();
+      setStartTime(Date.now());
+      setCaptureTimeRandomly();
     }
 
     setIsActive(!isActive);
@@ -20,10 +23,10 @@ const Timer = (props) => {
 
   function reset() {
     props.sessionEnder();
-    setSeconds(0);
-    setMinutes(0);
-    setHours(0);
+    setTime(0);
     setIsActive(false);
+    setCaptured(false);
+    setStartTime(null);
   }
 
   function capture() {
@@ -31,34 +34,39 @@ const Timer = (props) => {
   }
 
   function setCaptureTimeRandomly() {
-    setCaptureAt(Math.floor(Math.random() * 10));
+    setCaptureAt(Math.floor(Math.random() * 9) + 1);
   }
 
   useEffect(() => {
     let interval = null;
     if (isActive) {
       interval = setInterval(() => {
-        setSeconds(seconds => seconds + 1);
-        if (seconds + 1 === 60) {
-          setMinutes(minutes => minutes + 1);
-          setSeconds(0);
-        }
-        if (minutes === 60) {
-          setHours(hours => hours + 1);
-          setMinutes(0);
-        }
-      }, 1000);
-      if (minutes % 10 === captureAt) {
-        capture();
-      }
-      if (minutes > 0 && minutes % 10 === 0) {
-        setCaptureTimeRandomly();
-      }
-    } else if (!isActive && seconds !== 0) {
+        setTime(Date.now() - startTime);
+      }, 100);
+    } else if (!isActive && time !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActive, seconds, minutes, hours]);  
+  }, [isActive]);
+
+  const hours = Math.floor(time / 3600000);
+  const minutes = Math.floor((time / 60000) % 60);
+  const seconds = Math.floor((time / 1000) % 60);
+
+  if (minutes % 10 === captureAt && !captured) {
+    capture();
+    setCaptured(true);
+    setCaptureTimeSet(false);
+  }
+
+  if (minutes > 0 && minutes % 10 === 0 && !captureTimeSet) {
+    setCaptured(false);
+    setCaptureTimeRandomly();
+    setCaptureTimeSet(true);
+  }
+
+  console.log("captureAt", captureAt);
+  console.log("captured", captured);
 
   function n(n){
     return n > 9 ? "" + n: "0" + n;
