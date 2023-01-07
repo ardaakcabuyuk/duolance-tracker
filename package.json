@@ -75,6 +75,8 @@
         "zip"
       ],
       "icon": "build/icon.icns"
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
     }
   },
   "eslintConfig": {
