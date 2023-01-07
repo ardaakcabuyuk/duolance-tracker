@@ -68,13 +68,15 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           
       - name: build_python
-        run: npm run build-python
+        run: |
+          npm run build-python
+          sudo rm "/dist/mac/Duolance Tracker.app/Contents/Resources/app.asar.unpacked/capture_service/dist/capture/tk/images/logo100.gif"
         
       - name: build_react
         run: npm run react-build
         
       - name: build_deploy
-        run: sudo -E env "PATH=$PATH" npm run electron-build-deploy
+        run: npm run electron-build-deploy
 
       # - name: deploy_release
       #  run: CI=false npm run deploy
