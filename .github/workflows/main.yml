@@ -74,7 +74,7 @@ jobs:
         run: npm run react-build
         
       - name: build_deploy
-        run: sudo -E env "PATH=$PATH" electron-builder -mw --publish always
+        run: sudo -E env "PATH=$PATH" npm run electron-build-deploy
 
       # - name: deploy_release
       #  run: CI=false npm run deploy
