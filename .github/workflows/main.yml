@@ -66,9 +66,6 @@ jobs:
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: give_permission_to_files
-        run: chmod u+rw "/Users/runner/work/duolance-tracker/duolance-tracker/dist/mac/Duolance Tracker.app/Contents/Resources/app.asar.unpacked/capture_service/dist/capture/tk/images/logo100.gif"
-
       - name: deploy_release
         run: CI=false npm run deploy
         
