@@ -79,7 +79,21 @@
       "entitlements": "build/sign/entitlements.mac.plist",
       "entitlementsInherit": "build/sign/entitlements.mac.plist",
       "hardenedRuntime": true,
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "extendInfo": {
+        "NSAppTransportSecurity": {
+           "NSAllowsArbitraryLoads": true
+         },
+         "NSExceptionDomains": {
+           "localhost": {
+             "NSTemporaryExceptionAllowsInsecureHTTPSLoads": false,
+             "NSIncludesSubdomains": false,
+             "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+             "NSTemporaryExceptionMinimumTLSVersion": "1.0",
+             "NSTemporaryExceptionRequiresForwardSecrecy": false
+           }
+         }
+       }
     }
   },
   "eslintConfig": {
