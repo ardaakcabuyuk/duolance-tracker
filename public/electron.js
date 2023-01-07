@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
@@ -9,7 +9,25 @@ const captureExecCwd = isDev ?
 
 const isMac = process.platform === 'darwin';
 const captureExecPath = isMac ? path.join(captureExecCwd, 'capture'): path.join(captureExecCwd, 'capture.exe');
+
+autoUpdater.logger = require("electron-log")
+autoUpdater.logger.transports.file.level = "info"
+
 autoUpdater.checkForUpdatesAndNotify();
+autoUpdater.on('update-downloaded', (info) => {
+    // Show a dialog asking the user if they want to restart the app to install the update
+    dialog.showMessageBox({
+      type: 'question',
+      buttons: ['Install and Restart', 'Later'],
+      defaultId: 0,
+      message: 'A new update has been downloaded. Would you like to install and restart the app now?'
+    }, (response) => {
+      if (response === 0) {
+        // User clicked 'Install and Restart'
+        autoUpdater.quitAndInstall();
+      }
+    });
+});
 
 function createWindow() {
     const win = new BrowserWindow({
