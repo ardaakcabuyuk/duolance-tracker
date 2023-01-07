@@ -68,6 +68,6 @@ jobs:
 
       - name: deploy_release
         run: CI=false npm run deploy
-        
-      
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       
