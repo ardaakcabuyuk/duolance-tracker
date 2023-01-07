@@ -10,6 +10,7 @@ jobs:
     runs-on: macos-latest
     env: 
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      CI: false
     
     steps:
       - name: checkout
@@ -65,9 +66,18 @@ jobs:
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
+          
+      - name: build_python
+        run: npm run build-python
+        
+      - name: build_react
+        run: npm run react-build
+        
+      - name: build_deploy
+        run: sudo "PATH=$PATH" electron-builder -mw --publish always
 
-      - name: deploy_release
-        run: CI=false npm run deploy
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      # - name: deploy_release
+      #  run: CI=false npm run deploy
+      #  env: 
+      #    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       
