@@ -69,12 +69,15 @@
     },
     "afterSign": "build/sign/notarize.js",
     "mac": {
+      "asarUnpack": "**/*.node",
       "category": "public.app-category.productivity",
       "target": [
         "dmg",
         "zip"
       ],
       "icon": "build/icon.icns",
+      "entitlements": "build/sign/entitlements.mac.plist",
+      "entitlementsInherit": "build/sign/entitlements.mac.plist",
       "hardenedRuntime": true,
       "gatekeeperAssess": false
     }
