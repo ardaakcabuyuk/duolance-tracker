@@ -39,7 +39,7 @@
     "react-build": "react-scripts build",
     "electron-start": "wait-on tcp:3000 && electron .",
     "electron-build-local": "electron-builder -mw --publish never",
-    "electron-build-deploy": "electron-builder -mw --publish always",
+    "electron-build-deploy": "sudo electron-builder -mw --publish always",
     "build": "npm run build-python && npm run react-build && npm run electron-build-local",
     "build:dev": "env-cmd -f .env.dev npm run build",
     "build-python": "cd capture_service && python3 -m PyInstaller capture.py",
