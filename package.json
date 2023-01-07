@@ -5,7 +5,7 @@
     "email": "ardaakcabuyuk@gmail.com"
   },
   "description": "A tracker for the Duolance website",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
@@ -72,8 +72,7 @@
       "asarUnpack": "**/*.node",
       "category": "public.app-category.productivity",
       "target": [
-        "dmg",
-        "zip"
+        "default"
       ],
       "icon": "build/icon.icns",
       "entitlements": "build/sign/entitlements.mac.plist",
