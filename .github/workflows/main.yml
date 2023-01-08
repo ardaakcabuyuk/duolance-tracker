@@ -68,9 +68,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           
       - name: build_python
-        run: |
-          npm run build-python
-          sudo rm -rf capture_service/dist/capture/tk/images
+        run: npm run build-python
         
       - name: build_react
         run: npm run react-build
