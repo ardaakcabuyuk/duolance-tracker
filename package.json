@@ -5,7 +5,7 @@
     "email": "ardaakcabuyuk@gmail.com"
   },
   "description": "A tracker for the Duolance website",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
@@ -42,7 +42,7 @@
     "electron-build-deploy": "electron-builder -mw --publish always",
     "build": "npm run build-python && npm run react-build && npm run electron-build-local",
     "build:dev": "env-cmd -f .env.dev npm run build",
-    "build-python": "cd capture_service && python3 -m PyInstaller capture.py",
+    "build-python": "cd capture_service && python3 -m PyInstaller capture.spec",
     "deploy": "npm run build-python && npm run react-build && npm run electron-build-deploy",
     "start": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm run electron-start\"",
     "start:dev": "concurrently -k \"env-cmd -f .env.dev cross-env BROWSER=none react-scripts start\" \"npm run electron-start\""
