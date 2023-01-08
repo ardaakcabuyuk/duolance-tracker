@@ -24,9 +24,24 @@ autoUpdater.on('update-downloaded', (info) => {
     }, (response) => {
       if (response === 0) {
         // User clicked 'Install and Restart'
-        autoUpdater.quitAndInstall();
+        setTimeout(() => {
+            autoUpdater.quitAndInstall();
+        }, 3000);
       }
     });
+});
+
+autoUpdater.on('error', (err) => {
+    dialog.showMessageBox({
+        type: 'error',
+        buttons: ['Close'],
+        defaultId: 0,
+        message: err.message
+      }, (response) => {
+        if (response === 0) {
+          // User clicked 'Close'
+        }
+      });
 });
 
 function createWindow() {
