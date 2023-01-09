@@ -17,17 +17,15 @@ autoUpdater.checkForUpdatesAndNotify();
 autoUpdater.on('update-downloaded', (info) => {
     // Show a dialog asking the user if they want to restart the app to install the update
     dialog.showMessageBox({
-      type: 'question',
-      buttons: ['Install and Restart', 'Later'],
-      defaultId: 0,
-      message: 'A new update has been downloaded. Would you like to install and restart the app now?'
-    }, (response) => {
-      if (response === 0) {
-        // User clicked 'Install and Restart'
-        setTimeout(() => {
+        type: 'question',
+        buttons: ['Install and Restart', 'Later'],
+        defaultId: 0,
+        message: 'A new update has been downloaded. Would you like to install and restart the app now?'
+    }).then(selection => {
+        if (selection.response === 0) {
+            // User clicked 'Install and Restart'
             autoUpdater.quitAndInstall();
-        }, 3000);
-      }
+        }
     });
 });
 
