@@ -19,12 +19,12 @@
 		const {contract} = state.state;
 		const [boardCards, setBoardCards] = useState(undefined);
 		const statusPriority = [
-		'In Progress',
-		'Planned',
-		'Approved',
-		'Open',
-		'Completed',
-		'Archived'
+			'In Progress',
+			'Planned',
+			'Approved',
+			'Open',
+			'Completed',
+			'Archived'
 		];
 
 		const sortCards = (cards) => {
@@ -55,21 +55,22 @@
 
 		useEffect (() => {
 			axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
-			boardKeyId: contract.board  
+				boardKeyId: contract.board,
+				duoUserId: contract.contractFreelancer  
 			}).then(function (response) {
-			console.log(response.data);
-			setBoardCards(sortCards(response.data.response.cardList));
+				console.log(response.data);
+				setBoardCards(sortCards(response.data.response.cardList));
 			}).catch(function (error) {
-			console.log(error);
+				console.log(error);
 			});
 		}, []);
 
 		function handleCardClick(card) {
-		navigate('/contract-details', { state: { contract: contract, card: card } });
+			navigate('/contract-details', { state: { contract: contract, card: card } });
 		}
 
 		function handleGoBack() {
-		navigate('/dashboard', { state: { freelancerID: contract.contractFreelancer, from: 'cards' } });
+			navigate('/dashboard', { state: { freelancerID: contract.contractFreelancer, from: 'cards' } });
 		}
 
 		function handleLogout() {
