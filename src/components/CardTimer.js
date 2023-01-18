@@ -24,7 +24,8 @@ export default function CardTimer() {
     return () => {
         // componentwillunmount in functional component.
         // Anything in here is fired on component unmount.
-        endSession();
+        if (sessionID)
+          endSession();
     }
   }, [])
 
