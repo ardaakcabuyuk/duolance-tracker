@@ -73,35 +73,35 @@ export default function Cards() {
                     {boardCards.map(card => {
                       return (
                         <Col className={styles.col}>
-                          <Card className={styles.card} onClick={() => handleCardClick(card)}>
-                            <Card.Body>
+                          <Card className={`${styles.card} ${styles[card.status.toLowerCase()]}`} onClick={() => handleCardClick(card)}>
+                            <Card.Body style={{color: 'white'}}>
                               <div style={{float: "left"}}>
                                 <Card.Title>{card.title}</Card.Title>   
                                 <Card.Text>
-                                  Hours Worked: 3 / 10
-                                  {/* {Math.round(card.hoursWorked * 10) / 10} / {card.hoursMin} */}
+                                  Hours Worked: {Math.round(card.hoursWorked * 10) / 10} / {card.hoursMin}
                                 </Card.Text>
                               </div>
                               <div style={{float: "right", height: 56, width: 56}}>
-                                <ChangingProgressProvider values={[0, 33]}>
-                                {/* values={[0, Math.round(card.hoursWorked / card.hoursMin * 100)]}> */}
+                                <ChangingProgressProvider values={[0, Math.round(card.hoursWorked / card.hoursMin * 100)]}>
                                   {percentage => (
                                     <CircularProgressbar
                                       value={percentage}
                                       text={`${percentage}%`}
                                       styles={buildStyles({
+                                        strokeLinecap: 'butt',
                                         pathTransition: "stroke-dashoffset 0.5s ease 0s",
-                                        pathColor: `rgba(4, 201, 168, ${percentage / 50})`,
-                                        textColor: '#04c9a8',
-                                        trailColor: '#dceced'
+                                        pathColor: `rgba(4, 201, 168)`,
+                                        textColor: '#ffffff',
+                                        trailColor: '#ffffff',
+                                        textSize: '25px',
                                       })}
                                     />
                                   )}
                                 </ChangingProgressProvider>
                               </div>
                             </Card.Body>
-                            <Card.Footer className="text-muted">
-                              Status: {card.status}
+                            <Card.Footer style={{color: 'white'}}>
+                              {card.status}
                             </Card.Footer>
                           </Card>
                         </Col>

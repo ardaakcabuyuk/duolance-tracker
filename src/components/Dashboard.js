@@ -80,7 +80,7 @@ export default function Dashboard() {
                               </div>
                             </Card.Body>
                             <Card.Footer className="text-muted">
-                              Status: <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
+                              <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
                             </Card.Footer>
                           </Card>
                         </Col>

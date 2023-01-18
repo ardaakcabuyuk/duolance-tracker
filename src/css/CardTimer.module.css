@@ -72,6 +72,20 @@
     font-weight: 400;
     color: #fff;
     text-align: center;
+    justify-content: center;
+    height: 150px;
+    width: 150px;
+    margin: auto;
+}
+
+.due__date {
+    font-weight: 400;
+    font-size: small;
+    color: #fff;
+    text-align: center;
+    width: 250px;
+    margin: auto;
+    margin-top: 40px;
 }
 
 .memo__container {

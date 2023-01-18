@@ -94,14 +94,29 @@
     text-align: center;
 }
 
-.status__active {
-    color: #04c9a8;
-    display: inline;
+.approved {
+    background: #7ae5a0;
+    border-radius: inherit;
 }
 
-.status__inactive {
-    color: #c9040498;
-    display: inline;
+.open {
+    background: #fbd77b;
+    border-radius: inherit;
+}
+
+.planned {
+    background: #5abef4;
+    border-radius: inherit;
+}
+
+.completed {
+    background: #06dd6a;
+    border-radius: inherit;
+}
+
+.archived {
+    background: #8b8b8b;
+    border-radius: inherit;
 }
 
 .info__bar {
