@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import Select from 'react-select';
 import styles from '../css/ContractDetails.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/fontawesome-free-solid";
@@ -12,23 +11,11 @@ export default function ContractDetails() {
   const state = useLocation();
   const navigate = useNavigate();
   const [contract, setContract] = useState(state.state.contract);
-  const [boardCards, setBoardCards] = useState([]);
+  const [card, setCard] = useState(state.state.card);
   const [memo, setMemo] = useState("");
   const [sessionID, setSessionID] = useState(undefined);
   const [lastUpdate, setLastUpdate] = useState(undefined);
   const [lastCapture, setLastCapture] = useState(undefined);
-
-  useEffect (() => {
-    console.log(process.env.REACT_APP_ENVIRONMENT)
-    axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
-      boardKeyId: contract.board  
-    }).then(function (response) {
-      console.log(response.data);
-      setBoardCards(response.data.response.cardList);
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }, []);
 
   useEffect (() => {
     if (lastUpdate) {
@@ -104,7 +91,7 @@ export default function ContractDetails() {
     if (sessionID) {
       endSession();
     }
-    navigate('/dashboard', {state: {freelancerID: contract.contractFreelancer, from: 'details'}})
+    navigate('/cards', {state: {contract: contract}})
   }
 
   //if there's a session while logging out, end it
@@ -129,21 +116,10 @@ export default function ContractDetails() {
               </Button>
             </div>
             <div>
-              <div className={styles.header}>
-                  {contract.title}
+              <div className={styles.title}>
+                  {card.title}
               </div>
             </div>
-          </div>
-          <div className={styles.memo__container}>
-            <Select 
-              options={boardCards.map(card => {
-                return {value: card.title, label: card.title}
-              })}
-              onChange={(value) => setMemo(value.label)}
-              value={memo.label}
-              placeholder="What are you working on today?"
-              className="react-select__container"
-            />
           </div>
           <div className={styles.timer}>
             <Timer 

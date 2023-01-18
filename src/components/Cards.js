@@ -6,64 +6,85 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import styles from '../css/Cards.module.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/fontawesome-free-solid";
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import ChangingProgressProvider from "./ChangingProgressProvider";
-import styles from '../css/Dashboard.module.css';
 
-export default function Dashboard() {
+export default function Cards() {
     const state = useLocation();
     const navigate = useNavigate();
-    const {freelancerID, from} = state.state;
-    const [contractList, setContractList] = useState(undefined);
+    const {contract} = state.state;
+    const [boardCards, setBoardCards] = useState(undefined);
 
     useEffect (() => {
-      console.log(process.env.REACT_APP_ENVIRONMENT)
-      axios.post(
-          process.env.REACT_APP_CONTRACTS_URL, {
-              freelancerID: freelancerID
-          }
-      ).then(function (response) {
-        console.log(response.data);
-        setContractList(response.data.response.responseContract);
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }, [freelancerID]);
+        axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
+          boardKeyId: contract.board  
+        }).then(function (response) {
+          console.log(response.data);
+          setBoardCards(response.data.response.cardList);
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }, []);
 
-    function handleContractClick(contract) {
-      navigate('/cards', { state: { contract: contract, from: 'dashboard' } });
+    function handleCardClick(card) {
+      navigate('/contract-details', { state: { contract: contract, card: card } });
     }
 
+    function handleGoBack() {
+      navigate('/dashboard', { state: { freelancerID: contract.contractFreelancer, from: 'cards' } });
+    }
+
+    function handleLogout() {
+        navigate('/login');
+      }
+
     return (        
-      contractList ?
-        <div className={styles.container}>
+        boardCards ? <div className={styles.container}>
           <div className={styles.screen}>
             <div className={styles.header}>
             </div> 
-            <div className={styles.title}>
-              <h1>Contracts</h1>
-              <hr style={{marginLeft: "20px", marginRight: "20px"}}/>
+            <div className={styles.top}>
+                <div className={styles.back}>
+                    <Button 
+                        className={styles.back__button} 
+                        variant="outline-light" 
+                        onClick={() => handleGoBack()}>
+                        <FontAwesomeIcon icon={faChevronLeft} className={styles.button__icon} />
+                    </Button>
+                </div>
+                <div className={styles.title}>
+                    <h1 style={{
+                        marginLeft: "auto",
+                        marginRight: "auto"
+                    }}>Cards</h1>
+                </div>
+                <div>
+                <hr style={{color: "white", marginLeft: "20px", marginRight: "20px"}}/>
+                </div>
             </div>
             <div className={styles.content}>
               <div className={styles.contracts}>
-                <div id="contracts" style={{padding: "10px"}}>
+                <div id="cards" style={{padding: "10px"}}>
                   <Row xs={1} md={2} className="g-4">
-                    {contractList.map(contract => {
+                    {boardCards.map(card => {
                       return (
                         <Col className={styles.col}>
-                          <Card className={styles.card} onClick={() => handleContractClick(contract)}>
+                          <Card className={styles.card} onClick={() => handleCardClick(card)}>
                             <Card.Body>
                               <div style={{float: "left"}}>
-                                <Card.Title>{contract.title}</Card.Title>   
+                                <Card.Title>{card.title}</Card.Title>   
                                 <Card.Text>
-                                  Total hours: {Math.round(contract.totalHours * 10) / 10}
-                                  <br/>
-                                  Weekly hours: {Math.round(contract.weeklyHours * 10) / 10} / {contract.minWeeklyHour}
+                                  Hours Worked: 3 / 10
+                                  {/* {Math.round(card.hoursWorked * 10) / 10} / {card.hoursMin} */}
                                 </Card.Text>
                               </div>
-                              <div style={{float: "right", height: 80, width: 80}}>
-                                <ChangingProgressProvider values={[0, Math.round(contract.weeklyHours / contract.minWeeklyHour * 100)]}>
+                              <div style={{float: "right", height: 56, width: 56}}>
+                                <ChangingProgressProvider values={[0, 33]}>
+                                {/* values={[0, Math.round(card.hoursWorked / card.hoursMin * 100)]}> */}
                                   {percentage => (
                                     <CircularProgressbar
                                       value={percentage}
@@ -80,7 +101,7 @@ export default function Dashboard() {
                               </div>
                             </Card.Body>
                             <Card.Footer className="text-muted">
-                              Status: <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
+                              Status: {card.status}
                             </Card.Footer>
                           </Card>
                         </Col>
@@ -91,7 +112,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className={styles.footer}>
-              <Button className={styles.logout__button} onClick={() => navigate('/login')}>
+              <Button className={styles.logout__button} onClick={handleLogout}>
                 <span>Logout</span>
               </Button>
             </div>
@@ -101,7 +122,7 @@ export default function Dashboard() {
           bgColor='#ffffff'
           spinnerColor='#9ee5f8'
           textColor='#676767'
-          text = {from === 'login' ? "Logging in..." : "Loading contracts..."}
+          text = "Fetching Cards..."
         ></LoadingScreen>
     )
 }
