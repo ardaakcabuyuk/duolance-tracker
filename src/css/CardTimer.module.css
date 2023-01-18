@@ -24,7 +24,7 @@
 .page__top {
     display: flex;
     justify-content: space-between;
-    padding: 35px 20px;
+    padding: 40px 20px;
     flex-direction: column;
     padding-bottom: 10px;
 }
@@ -37,7 +37,7 @@
     left: 20px;
 }
 
-.header {
+.title {
     justify-content: space-between;
     align-items: center; 
     padding: 10px;
@@ -72,6 +72,20 @@
     font-weight: 400;
     color: #fff;
     text-align: center;
+    justify-content: center;
+    height: 150px;
+    width: 150px;
+    margin: auto;
+}
+
+.due__date {
+    font-weight: 400;
+    font-size: small;
+    color: #fff;
+    text-align: center;
+    width: 250px;
+    margin: auto;
+    margin-top: 40px;
 }
 
 .memo__container {
@@ -83,7 +97,7 @@
 .logout__button {
     padding: .6rem 1.5rem;
     margin: .4rem;
-    border-radius: 3px;
+    border-radius: 10px;
     text-transform: uppercase;
     font-weight: 300;
     font-size: .8rem;

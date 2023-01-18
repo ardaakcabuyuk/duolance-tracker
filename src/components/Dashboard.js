@@ -6,7 +6,9 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-
+import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import ChangingProgressProvider from "./ChangingProgressProvider";
 import styles from '../css/Dashboard.module.css';
 
 export default function Dashboard() {
@@ -30,7 +32,7 @@ export default function Dashboard() {
     }, [freelancerID]);
 
     function handleContractClick(contract) {
-      navigate('/contract-details', { state: { contract: contract } });
+      navigate('/cards', { state: { contract: contract, from: 'dashboard' } });
     }
 
     return (        
@@ -41,7 +43,7 @@ export default function Dashboard() {
             </div> 
             <div className={styles.title}>
               <h1>Contracts</h1>
-              <hr style={{marginLeft: "10px", marginRight: "10px"}}/>
+              <hr style={{marginLeft: "20px", marginRight: "20px"}}/>
             </div>
             <div className={styles.content}>
               <div className={styles.contracts}>
@@ -49,18 +51,36 @@ export default function Dashboard() {
                   <Row xs={1} md={2} className="g-4">
                     {contractList.map(contract => {
                       return (
-                        <Col>
-                          <Card onClick={() => handleContractClick(contract)}>
+                        <Col className={styles.col}>
+                          <Card className={styles.card} onClick={() => handleContractClick(contract)}>
                             <Card.Body>
-                              <Card.Title>{contract.title}</Card.Title>               
-                              <Card.Text>
-                                Total hours: {Math.round(contract.totalHours * 10) / 10}
-                                <br/>
-                                Weekly hours: {Math.round(contract.weeklyHours * 10) / 10}
-                              </Card.Text>
+                              <div style={{float: "left"}}>
+                                <Card.Title>{contract.title}</Card.Title>   
+                                <Card.Text>
+                                  Total hours: {Math.round(contract.totalHours * 10) / 10}
+                                  <br/>
+                                  Weekly hours: {Math.round(contract.weeklyHours * 10) / 10} / {contract.minWeeklyHour}
+                                </Card.Text>
+                              </div>
+                              <div style={{float: "right", height: 80, width: 80}}>
+                                <ChangingProgressProvider values={[0, Math.round(contract.weeklyHours / contract.minWeeklyHour * 100)]}>
+                                  {percentage => (
+                                    <CircularProgressbar
+                                      value={percentage}
+                                      text={`${percentage}%`}
+                                      styles={buildStyles({
+                                        pathTransition: "stroke-dashoffset 0.5s ease 0s",
+                                        pathColor: `rgba(4, 201, 168, ${percentage / 50})`,
+                                        textColor: '#04c9a8',
+                                        trailColor: '#dceced'
+                                      })}
+                                    />
+                                  )}
+                                </ChangingProgressProvider>
+                              </div>
                             </Card.Body>
                             <Card.Footer className="text-muted">
-                              Status: <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
+                              <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
                             </Card.Footer>
                           </Card>
                         </Col>

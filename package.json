@@ -5,7 +5,7 @@
     "email": "ardaakcabuyuk@gmail.com"
   },
   "description": "A tracker for the Duolance website",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
@@ -19,6 +19,7 @@
     "python-shell": "^3.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.6.0",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-loading-screen": "^0.0.17",
     "react-router-dom": "^6.4.3",
@@ -81,18 +82,18 @@
       "gatekeeperAssess": false,
       "extendInfo": {
         "NSAppTransportSecurity": {
-           "NSAllowsArbitraryLoads": true
-         },
-         "NSExceptionDomains": {
-           "localhost": {
-             "NSTemporaryExceptionAllowsInsecureHTTPSLoads": false,
-             "NSIncludesSubdomains": false,
-             "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
-             "NSTemporaryExceptionMinimumTLSVersion": "1.0",
-             "NSTemporaryExceptionRequiresForwardSecrecy": false
-           }
-         }
-       }
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSExceptionDomains": {
+          "localhost": {
+            "NSTemporaryExceptionAllowsInsecureHTTPSLoads": false,
+            "NSIncludesSubdomains": false,
+            "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+            "NSTemporaryExceptionMinimumTLSVersion": "1.0",
+            "NSTemporaryExceptionRequiresForwardSecrecy": false
+          }
+        }
+      }
     }
   },
   "eslintConfig": {

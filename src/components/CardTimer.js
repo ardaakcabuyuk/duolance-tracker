@@ -2,35 +2,26 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import Select from 'react-select';
-import styles from '../css/ContractDetails.module.css';
+import styles from '../css/CardTimer.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/fontawesome-free-solid";
 import Timer from "./Timer";
+import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import ChangingProgressProvider from "./ChangingProgressProvider";
 
-export default function ContractDetails() {
+export default function CardTimer() {
   const state = useLocation();
   const navigate = useNavigate();
   const [contract, setContract] = useState(state.state.contract);
-  const [boardCards, setBoardCards] = useState([]);
+  const [card, setCard] = useState(state.state.card);
   const [memo, setMemo] = useState("");
   const [sessionID, setSessionID] = useState(undefined);
   const [lastUpdate, setLastUpdate] = useState(undefined);
   const [lastCapture, setLastCapture] = useState(undefined);
 
   useEffect (() => {
-    console.log(process.env.REACT_APP_ENVIRONMENT)
-    axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
-      boardKeyId: contract.board  
-    }).then(function (response) {
-      console.log(response.data);
-      setBoardCards(response.data.response.cardList);
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }, []);
-
-  useEffect (() => {
+    let updatedContract = null;
     if (lastUpdate) {
       axios.post(
         process.env.REACT_APP_CONTRACTS_URL, {
@@ -38,7 +29,14 @@ export default function ContractDetails() {
         }
       ).then(function (response) {
         console.log(response.data);
-        setContract(response.data.response.responseContract.find(c => c._id === contract._id));
+        updatedContract = response.data.response.responseContract.find(c => c._id === contract._id)
+        setContract(updatedContract);
+        return axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
+          boardKeyId: updatedContract.board  
+        })
+      }).then(function (response) {
+        console.log(response.data);
+        setCard(response.data.response.cardList.find(c => c._id === card._id));
       }).catch(function (error) {
         console.log(error);
       });
@@ -104,7 +102,7 @@ export default function ContractDetails() {
     if (sessionID) {
       endSession();
     }
-    navigate('/dashboard', {state: {freelancerID: contract.contractFreelancer, from: 'details'}})
+    navigate('/cards', {state: {contract: contract}})
   }
 
   //if there's a session while logging out, end it
@@ -129,21 +127,10 @@ export default function ContractDetails() {
               </Button>
             </div>
             <div>
-              <div className={styles.header}>
-                  {contract.title}
+              <div className={styles.title}>
+                  {card.title}
               </div>
             </div>
-          </div>
-          <div className={styles.memo__container}>
-            <Select 
-              options={boardCards.map(card => {
-                return {value: card.title, label: card.title}
-              })}
-              onChange={(value) => setMemo(value.label)}
-              value={memo.label}
-              placeholder="What are you working on today?"
-              className="react-select__container"
-            />
           </div>
           <div className={styles.timer}>
             <Timer 
@@ -153,10 +140,25 @@ export default function ContractDetails() {
             />
           </div>
           <div className={styles.info__text}>
-            This week: {Math.round(contract.weeklyHours * 10) / 10} hours
-            <br/>
-            Total: {Math.round(contract.totalHours * 10) / 10} hours
+            <ChangingProgressProvider values={[0, Math.round(card.hoursWorked / card.hoursMin * 100)]}>
+                {percentage => (
+                  <CircularProgressbar
+                    value={percentage}
+                    text={`${percentage}%`}
+                    styles={buildStyles({
+                      strokeLinecap: 'butt',
+                      pathTransition: "stroke-dashoffset 0.5s ease 0s",
+                      pathColor: `rgba(4, 201, 168)`,
+                      textColor: '#ffffff',
+                      trailColor: '#ffffff',
+                      textSize: '25px',
+                    })}
+                  />
+                )}
+              </ChangingProgressProvider>
+              <p>{Math.round(card.hoursWorked * 10) / 10} / {card.hoursMin} hours</p>
           </div>
+          <p className={styles.due__date}>Due: {new Date(card.dateDueFreelancer).toUTCString()}</p>
         </div>
         <div className={styles.footer}>
               <Button className={styles.logout__button} onClick={handleLogout}>
