@@ -20,6 +20,15 @@ export default function CardTimer() {
   const [lastUpdate, setLastUpdate] = useState(undefined);
   const [lastCapture, setLastCapture] = useState(undefined);
 
+  useEffect(() => {
+    return () => {
+        // componentwillunmount in functional component.
+        // Anything in here is fired on component unmount.
+        if (sessionID)
+          endSession();
+    }
+  }, [])
+
   useEffect (() => {
     let updatedContract = null;
     if (lastUpdate) {
@@ -63,6 +72,7 @@ export default function CardTimer() {
     axios.post(process.env.REACT_APP_START_SESSION_URL, {
       start: Date.now(),
       contractId: contract._id,
+      cardId: card._id,
     }).then(function (response) {
       console.log(response.data);
       setSessionID(response.data.response['session-id']);

@@ -119,6 +119,11 @@
     border-radius: inherit;
 }
 
+.inprogress {
+    background: #ff9b7d;
+    border-radius: inherit;
+}
+
 .info__bar {
     height: 100%;
     float: right !important;
