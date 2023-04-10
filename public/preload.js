@@ -15,3 +15,9 @@ contextBridge.exposeInMainWorld('version_api', {
     ipcRenderer.send('version:restart_app')
   }
 });
+
+contextBridge.exposeInMainWorld('idle_api', {
+  getIdleTime: () => {
+    return ipcRenderer.invoke('idle:get_idle_time')
+  }
+});

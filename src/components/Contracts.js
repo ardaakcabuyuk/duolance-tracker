@@ -9,13 +9,30 @@ import Button from 'react-bootstrap/Button';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import ChangingProgressProvider from "./ChangingProgressProvider";
-import styles from '../css/Dashboard.module.css';
+import styles from '../css/Contracts.module.css';
 
-export default function Dashboard() {
+import SearchBar from "./SearchBar";
+import LogoutButton from "./LogoutButton";
+import { calcPercentage } from '../utils/Utils';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
+export default function Contracts() {
     const state = useLocation();
     const navigate = useNavigate();
     const {freelancerID, from} = state.state;
     const [contractList, setContractList] = useState(undefined);
+    const [searchKey, setSearchKey] = useState("");
+
+    function handleScroll(e) {
+      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      if (bottom) {
+        e.target.className = styles.content__scroll_bottom;
+      }
+      else {
+        e.target.className = styles.content;
+      }
+    }
 
     useEffect (() => {
       console.log(process.env.REACT_APP_ENVIRONMENT)
@@ -31,25 +48,32 @@ export default function Dashboard() {
       });
     }, [freelancerID]);
 
+    const filteredContractList = contractList ? contractList.filter(contract => {
+      return contract.title.toLowerCase().includes(searchKey.toLowerCase());
+    }) : [];
+
     function handleContractClick(contract) {
-      navigate('/cards', { state: { contract: contract, from: 'dashboard' } });
+      navigate('/cards', { state: { contract: contract, from: 'contracts' } });
     }
 
     return (        
       contractList ?
         <div className={styles.container}>
-          <div className={styles.screen}>
-            <div className={styles.header}>
+          <div className={`${styles.screen} ${styles.non__selectable}`}>
+            <div className={`${styles.header} ${styles.draggable}`}>
             </div> 
-            <div className={styles.title}>
+            <div className={`${styles.title} ${styles.draggable}`}>
               <h1>Contracts</h1>
-              <hr style={{marginLeft: "20px", marginRight: "20px"}}/>
             </div>
-            <div className={styles.content}>
+            <SearchBar 
+              setSearchKey={setSearchKey}
+              type="Contracts"
+            />
+            <div className={styles.content} onScroll={handleScroll}>
               <div className={styles.contracts}>
                 <div id="contracts" style={{padding: "10px"}}>
                   <Row xs={1} md={2} className="g-4">
-                    {contractList.map(contract => {
+                    {filteredContractList.length ? filteredContractList.map(contract => {
                       return (
                         <Col className={styles.col}>
                           <Card className={styles.card} onClick={() => handleContractClick(contract)}>
@@ -59,11 +83,11 @@ export default function Dashboard() {
                                 <Card.Text>
                                   Total hours: {Math.round(contract.totalHours * 10) / 10}
                                   <br/>
-                                  Weekly hours: {Math.round(contract.weeklyHours * 10) / 10} / {contract.minWeeklyHour}
+                                  Weekly hours: {Math.round(contract.weeklyHours * 10) / 10} / {contract.minWeeklyHour ? contract.minWeeklyHour : "Not set"}
                                 </Card.Text>
                               </div>
                               <div style={{float: "right", height: 80, width: 80}}>
-                                <ChangingProgressProvider values={[0, Math.round(contract.weeklyHours / contract.minWeeklyHour * 100)]}>
+                                <ChangingProgressProvider values={[0, calcPercentage(contract.weeklyHours, contract.minWeeklyHour)]}>
                                   {percentage => (
                                     <CircularProgressbar
                                       value={percentage}
@@ -85,19 +109,23 @@ export default function Dashboard() {
                           </Card>
                         </Col>
                       )
-                    })}
+                    }) : 
+                    <div style={{textAlign: "center", height: "100%"}}>
+                      <h5 style={{color: "white"}}>Oh, snap!</h5>
+                      <p style={{color: "white"}}>There are no contracts.</p>
+                    </div>
+                    }
                   </Row>
                 </div>
               </div>
             </div>
             <div className={styles.footer}>
-              <Button className={styles.logout__button} onClick={() => navigate('/login')}>
-                <span>Logout</span>
-              </Button>
+              <LogoutButton></LogoutButton>
             </div>
           </div>
         </div> : <LoadingScreen
           loading={true}
+          logoSrc="https://s3.amazonaws.com/appforest_uf/f1680688260742x718604605764663200/icon.png"
           bgColor='#ffffff'
           spinnerColor='#9ee5f8'
           textColor='#676767'

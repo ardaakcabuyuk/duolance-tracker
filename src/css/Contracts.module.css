@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Maven+Pro');
+
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;	
-	font-family: Raleway, sans-serif;
+	font-family: Maven Pro, sans-serif;
 }
 
 .container {
@@ -20,35 +22,32 @@
 	width: 400px;	
 }
 
-.logout__button {
-    padding: .6rem 1.5rem;
-    margin: .4rem;
-    border-radius: 10px;
-    text-transform: uppercase;
-    font-weight: 300;
-    font-size: .8rem;
-    border-style: none;
-    color: #000;
-    background: #fff;
-
-}
-
-.logout__button:hover {
-    background-color: #ff0000;
-}
-
 .title {
     color: #fff;
     text-align: center;
     font-size: 1.5rem;
     font-weight: 900;
-    margin: 10;
+    margin-bottom: 25px;
 }
 
 .content {
-    height: 408.5px;
+    height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
+    --mask: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 3%, rgba(0, 0, 0, 1) 97%, rgba(0, 0, 0, 0) 100%);
+
+    -webkit-mask: var(--mask); 
+    mask: var(--mask);
+}
+
+.content__scroll_bottom {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    --mask: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 97%, rgba(0, 0, 0, 0) 100%);
+
+    -webkit-mask: var(--mask); 
+    mask: var(--mask);
 }
 
 ::-webkit-scrollbar {
@@ -60,12 +59,20 @@
     padding-right: 20px;
 }
 
-.header,
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    color: #fff;
+    text-align: center;
+}
+
 .footer {
     display: flex;
     justify-content: center;
     align-items: center; 
-    padding: 20px 20px;
+    padding: 15px;
     color: #fff;
     text-align: center;
 }
@@ -93,4 +100,16 @@
 .card:hover {
     transform: scale(1.02);
     box-shadow: 0 13px 40px -5px rgba(50, 50, 93, 0.052), 0 8px 32px -8px hsla(0, 0%, 0%, 0.06), 0 -6px 32px -6px hsla(0, 0%, 0%, 0.02);
+}
+
+.non__selectable {
+    -webkit-user-select: none;
+}
+
+.draggable {
+    -webkit-app-region: drag;
+}
+
+.non__draggable {
+    -webkit-app-region: no-drag;
 }
