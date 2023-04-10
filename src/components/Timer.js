@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 
 import styles from '../css/Timer.module.css';
+import EndSessionModal from './EndSessionModal';
+import IdleModal from './IdleModal';
 
 const Timer = (props) => {
   const [captureAt, setCaptureAt] = useState(null);   
   const [captureTimeSet, setCaptureTimeSet] = useState(false);
   const [captured, setCaptured] = useState(false);
+
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(0);
   const [startTime, setStartTime] = useState(null);
+
+  const [showEndSessionModal, setShowEndSessionModal] = useState(false);
+
+  const [idleTime, setIdleTime] = useState();
+  const [showIdleModal, setShowIdleModal] = useState(false);
 
   function toggle() {
     if (!isActive) {
@@ -17,12 +25,12 @@ const Timer = (props) => {
       setStartTime(Date.now());
       setCaptureTimeRandomly();
     }
-
     setIsActive(!isActive);
   }
 
-  function reset() {
-    props.sessionEnder();
+  function endSession(endNote, idle=false) {
+    handleCloseEndSessionModal();
+    props.sessionEnder(endNote, idle);
     setTime(0);
     setIsActive(false);
     setCaptured(false);
@@ -65,12 +73,36 @@ const Timer = (props) => {
     setCaptureTimeSet(true);
   }
 
-  console.log("captureAt", captureAt);
-  console.log("captured", captured);
-
   function n(n){
     return n > 9 ? "" + n: "0" + n;
   }
+
+  function handleShowEndSessionModal() {
+    setShowEndSessionModal(true);
+  }
+
+  function handleCloseEndSessionModal() {
+    setShowEndSessionModal(false);
+  }
+
+  function handleCloseIdleModal() {
+    setShowIdleModal(false);
+  }
+
+  if (isActive) {
+    window.idle_api.getIdleTime().then(function (response) {
+      setIdleTime(response);
+    });
+  }
+
+  useEffect(() => {
+    if (idleTime >= 3) {
+      setShowIdleModal(true);
+    }
+    else {
+      setShowIdleModal(false);
+    }
+  }, [idleTime]);
 
   return (
     <div className={styles.app}>
@@ -80,15 +112,21 @@ const Timer = (props) => {
       </div>
       <div className={styles.row}>
         <Button 
-        className={`${styles.start__button} ${isActive ? styles.start__button__clicked : ""}`} 
-        onClick={toggle}
-        disabled={isActive ? true : false}
+          className={`${styles.start__button} ${isActive ? styles.start__button__clicked : ""}`} 
+          onClick={toggle}
+          disabled={isActive ? true : false}
         >
           Start
         </Button>
-        <Button className={styles.stop__button} onClick={reset}>
+        <Button 
+          className={styles.stop__button} 
+          onClick={handleShowEndSessionModal} 
+          disabled={isActive ? false : true}
+        >
           Stop
         </Button>
+        <EndSessionModal show={showEndSessionModal} handleClose={handleCloseEndSessionModal} endSession={endSession}/>
+        {showIdleModal ? <IdleModal show={showIdleModal} handleClose={handleCloseIdleModal} endSession={endSession}/> : null}
       </div>
     </div>
   );

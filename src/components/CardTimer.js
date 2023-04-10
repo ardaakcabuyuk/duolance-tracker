@@ -10,6 +10,9 @@ import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import ChangingProgressProvider from "./ChangingProgressProvider";
 
+import { calcPercentage } from '../utils/Utils';
+import LogoutButton from "./LogoutButton";
+
 export default function CardTimer() {
   const state = useLocation();
   const navigate = useNavigate();
@@ -25,7 +28,7 @@ export default function CardTimer() {
         // componentwillunmount in functional component.
         // Anything in here is fired on component unmount.
         if (sessionID)
-          endSession();
+          endSession("");
     }
   }, [])
 
@@ -40,8 +43,10 @@ export default function CardTimer() {
         console.log(response.data);
         updatedContract = response.data.response.responseContract.find(c => c._id === contract._id)
         setContract(updatedContract);
+        console.log(updatedContract)
         return axios.post(process.env.REACT_APP_BOARD_CARDS_URL, {
-          boardKeyId: updatedContract.board  
+          boardKeyId: updatedContract.board  ,
+          duoUserId: updatedContract.contractFreelancer
         })
       }).then(function (response) {
         console.log(response.data);
@@ -92,11 +97,17 @@ export default function CardTimer() {
     });
   }
 
-  function endSession() {
+  function endSession(endNote, idle=false) {
+    const endTime = new Date(Date.now());
+    if (idle) {
+      endTime.setMinutes(endTime.getMinutes() - 30);
+    }
+    
     axios.post(process.env.REACT_APP_END_SESSION_URL, {
-      end: Date.now(),
+      end: endTime,
       sessionId: sessionID,
       contractId: contract._id,
+      endNote: endNote
     }).then(function (response) {
       console.log(response.data);
       setSessionID(undefined);
@@ -107,10 +118,10 @@ export default function CardTimer() {
     });
   }
 
-  //if there's a session while going back to the dashboard, end it
+  //if there's a session while going back to the contracts, end it
   function handleGoBack() {
     if (sessionID) {
-      endSession();
+      endSession("");
     }
     navigate('/cards', {state: {contract: contract}})
   }
@@ -118,7 +129,7 @@ export default function CardTimer() {
   //if there's a session while logging out, end it
   function handleLogout() {
     if (sessionID) {
-      endSession();
+      endSession("");
     }
     navigate('/login');
   }
@@ -127,13 +138,14 @@ export default function CardTimer() {
     <div className={styles.container}>
       <div className={styles.screen}>
         <div className={styles.content}>
-          <div className={styles.page__top}>
+          <div className={`${styles.page__top} ${styles.draggable}`}>
             <div className={styles.page__top__upper}>
               <Button 
-                className={styles.back__button} 
+                className={`${styles.back__button} ${styles.non__draggable}`} 
                 variant="outline-light" 
                 onClick={() => handleGoBack()}>
                 <FontAwesomeIcon icon={faChevronLeft} className={styles.button__icon} />
+                Cards
               </Button>
             </div>
             <div>
@@ -142,15 +154,15 @@ export default function CardTimer() {
               </div>
             </div>
           </div>
-          <div className={styles.timer}>
+          <div className={`${styles.timer} ${styles.non__selectable}`}>
             <Timer 
               sessionStarter={startSession}
               sessionEnder={endSession}
               capturer={capture}
             />
           </div>
-          <div className={styles.info__text}>
-            <ChangingProgressProvider values={[0, Math.round(card.hoursWorked / card.hoursMin * 100)]}>
+          <div className={`${styles.info__text} ${styles.non__selectable}`}>
+            <ChangingProgressProvider values={[0, calcPercentage(card.hoursWorked, card.hoursMin)]}>
                 {percentage => (
                   <CircularProgressbar
                     value={percentage}
@@ -166,14 +178,14 @@ export default function CardTimer() {
                   />
                 )}
               </ChangingProgressProvider>
-              <p>{Math.round(card.hoursWorked * 10) / 10} / {card.hoursMin} hours</p>
+              <p>{(Math.round(card.hoursWorked * 10) / 10).toFixed(1)} / {card.hoursMin ? card.hoursMin.toFixed(1): "?"} hrs</p>
           </div>
-          <p className={styles.due__date}>Due: {new Date(card.dateDueFreelancer).toUTCString()}</p>
+          <p className={`${styles.due__date} ${styles.non__selectable}`}>
+            {card.dateDueFreelancer ? `Due: ${new Date(card.dateDueFreelancer).toUTCString()}`: "Due date not specified."}
+          </p>
         </div>
         <div className={styles.footer}>
-              <Button className={styles.logout__button} onClick={handleLogout}>
-                <span>Logout</span>
-              </Button>
+              <LogoutButton></LogoutButton>
           </div>
       </div>
     </div>

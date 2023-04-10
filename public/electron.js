@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog, powerMonitor} = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
@@ -9,6 +9,7 @@ const captureExecCwd = isDev ?
 
 const isMac = process.platform === 'darwin';
 const captureExecPath = isMac ? path.join(captureExecCwd, 'capture'): path.join(captureExecCwd, 'capture.exe');
+const IDLE_IN_SECONDS = 1800;
 
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
@@ -42,8 +43,10 @@ autoUpdater.on('error', (err) => {
       });
 });
 
+
+let win = null;
 function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         title: 'Duolance Tracker',
         width: 400,
         height: 600,
@@ -55,6 +58,7 @@ function createWindow() {
         },
         titleBarStyle: 'hidden',
     });
+
     win.setResizable(false);
     win.loadURL(
         isDev 
@@ -111,4 +115,12 @@ ipcMain.handle('screenshot:capture', async(e, value) => {
     
     const result = await promise;
     return result;
+});
+
+ipcMain.handle('idle:get_idle_time', async(e, value) => {
+    const idleTime = powerMonitor.getSystemIdleTime();
+    if (idleTime >= IDLE_IN_SECONDS) {
+        win.show();
+    }
+    return idleTime;
 });
