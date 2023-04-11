@@ -5,6 +5,8 @@ import styles from '../css/Timer.module.css';
 import EndSessionModal from './EndSessionModal';
 import IdleModal from './IdleModal';
 
+const USER_IDLE_AT = 1800;
+
 const Timer = (props) => {
   const [captureAt, setCaptureAt] = useState(null);   
   const [captureTimeSet, setCaptureTimeSet] = useState(false);
@@ -96,7 +98,7 @@ const Timer = (props) => {
   }
 
   useEffect(() => {
-    if (idleTime >= 3) {
+    if (idleTime >= USER_IDLE_AT) {
       setShowIdleModal(true);
     }
     else {
