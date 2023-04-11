@@ -62,7 +62,7 @@ export default function Login() {
       if (response.data.response['login-success']) {
         const token = response.data.response.token;
         //set JWT token to local
-        localStorage.setItem("token", token.value);
+        localStorage.setItem("token", token);
         localStorage.setItem("expires", Date.now() + response.data.response.expires * 1000);
         localStorage.setItem("user_id", response.data.response['user_id'])
         //set token to axios common header
