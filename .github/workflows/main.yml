@@ -42,6 +42,7 @@ jobs:
           echo REACT_APP_START_SESSION_URL=${{ secrets.REACT_APP_START_SESSION_URL }} >> .env
           echo REACT_APP_SEND_MEMO_URL=${{ secrets.REACT_APP_SEND_MEMO_URL }} >> .env
           echo REACT_APP_END_SESSION_URL=${{ secrets.REACT_APP_END_SESSION_URL }} >> .env
+          echo REACT_APP_CREATE_CARD_URL=${{ secrets.REACT_APP_CREATE_CARD_URL }} >> .env
           echo REACT_APP_APPLE_ID=${{ secrets.REACT_APP_APPLE_ID }} >> .env
           echo REACT_APP_APPLE_ID_PASSWORD=${{ secrets.REACT_APP_APPLE_ID_PASSWORD }} >> .env
 
