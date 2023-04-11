@@ -5,7 +5,7 @@
     "email": "ardaakcabuyuk@gmail.com"
   },
   "description": "A tracker for the Duolance website",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
