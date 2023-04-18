@@ -21,3 +21,14 @@ contextBridge.exposeInMainWorld('idle_api', {
     return ipcRenderer.invoke('idle:get_idle_time')
   }
 });
+
+contextBridge.exposeInMainWorld('main_process', {
+  on: (channel, func) => {
+    console.log('on', channel)
+    ipcRenderer.on(channel, func);
+  },
+  removeListener: (channel) => {
+    console.log('removeListener', channel)
+    ipcRenderer.removeAllListeners(channel);
+  }
+});

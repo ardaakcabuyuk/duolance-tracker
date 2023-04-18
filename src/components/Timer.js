@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
-
 import styles from '../css/Timer.module.css';
 import EndSessionModal from './EndSessionModal';
 import IdleModal from './IdleModal';
@@ -8,6 +7,9 @@ import IdleModal from './IdleModal';
 const USER_IDLE_AT = 1800;
 
 const Timer = (props) => {
+
+  const [sessionId, setSessionId] = useState(null);
+
   const [captureAt, setCaptureAt] = useState(null);   
   const [captureTimeSet, setCaptureTimeSet] = useState(false);
   const [captured, setCaptured] = useState(false);
@@ -21,22 +23,37 @@ const Timer = (props) => {
   const [idleTime, setIdleTime] = useState();
   const [showIdleModal, setShowIdleModal] = useState(false);
 
-  function toggle() {
+  async function toggle() {
     if (!isActive) {
-      props.sessionStarter();
       setStartTime(Date.now());
+      setIsActive(true);
+      const sessionId = await props.sessionStarter();
+      console.log('Session started: ' + sessionId);
       setCaptureTimeRandomly();
+      window.main_process.on('system-state-change', () => {
+        endSession(sessionId, "User device went sleeping or shut down.", true);
+      });
+      setSessionId(sessionId);
     }
-    setIsActive(!isActive);
+    else {
+      setIsActive(false);
+    }
   }
 
-  function endSession(endNote, idle=false) {
+  function endSession(id=null, endNote, idle=false) {
     handleCloseEndSessionModal();
-    props.sessionEnder(endNote, idle);
+
+    if (id)
+      props.sessionEnder(id, endNote, idle);
+    else
+      props.sessionEnder(sessionId, endNote, idle);
+
     setTime(0);
     setIsActive(false);
     setCaptured(false);
     setStartTime(null);
+
+    window.main_process.removeListener('system-state-change');
   }
 
   function capture() {
@@ -95,6 +112,11 @@ const Timer = (props) => {
     window.idle_api.getIdleTime().then(function (response) {
       setIdleTime(response);
     });
+
+    // window.idle_api.receiveSystemState('system-state-change', (data) => {
+    //   console.log('event received:')
+    //   console.log('data', data);
+    // });
   }
 
   useEffect(() => {

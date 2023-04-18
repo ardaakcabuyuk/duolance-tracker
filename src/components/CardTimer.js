@@ -73,17 +73,21 @@ export default function CardTimer() {
     }
   }, [lastCapture]);
 
-  function startSession() {
-    axios.post(process.env.REACT_APP_START_SESSION_URL, {
-      start: Date.now(),
-      contractId: contract._id,
-      cardId: card._id,
-    }).then(function (response) {
-      console.log(response.data);
-      setSessionID(response.data.response['session-id']);
-    }).catch(function (error) {
-      console.log(error);
-    });
+  async function startSession() {
+    let response = null;
+    try {
+      response = await axios.post(process.env.REACT_APP_START_SESSION_URL, {
+        start: Date.now(),
+        contractId: contract._id,
+        cardId: card._id,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    console.log(response.data);
+    setSessionID(response.data.response['session-id']);
+    return response.data.response['session-id'];
   }
 
   function capture() {
@@ -97,15 +101,21 @@ export default function CardTimer() {
     });
   }
 
-  function endSession(endNote, idle=false) {
+  function endSession(id=sessionID, endNote, idle=false) {
     const endTime = new Date(Date.now());
+
     if (idle) {
-      endTime.setMinutes(endTime.getMinutes() - 30);
+      window.idle_api.getIdleTime().then((result) => {
+        console.log('Idle time: ' + result);
+        console.log('Before: ' + endTime);
+        endTime.setSeconds(endTime.getSeconds() - result);
+        console.log('After: ' + endTime);
+      });
     }
     
     axios.post(process.env.REACT_APP_END_SESSION_URL, {
       end: endTime,
-      sessionId: sessionID,
+      sessionId: id,
       contractId: contract._id,
       endNote: endNote
     }).then(function (response) {

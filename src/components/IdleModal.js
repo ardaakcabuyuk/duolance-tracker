@@ -30,7 +30,7 @@ export default function IdleModal(props) {
     }, [idleTime])
 
     if (remaining === 0 && !sessionEnded) {
-        props.endSession("User was idle for 30 minutes.", true);
+        props.endSession(null, "User was idle for 30 minutes.", true);
         setSessionEnded(true);
     }
     
