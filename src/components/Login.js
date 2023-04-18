@@ -84,12 +84,12 @@ export default function Login() {
   }
 
   return (
-    (!userId || tokenExpired) && <div className={`${styles.container} ${styles.non__selectable}`}>
+    (!userId || tokenExpired) && <div className={`${styles.container} ${styles.non__selectable} ${styles.draggable}`}>
       <div className={styles.screen}>
         <div className={styles.screen__content}>
           <Form onSubmit={login} className={styles.login}>
             <Image src="static/duolance-logo.png" className={styles.duo__logo} />
-            <div className={styles.login__field}>
+            <div className={`${styles.login__field} ${styles.non__draggable}`}>
               <Form.Group size="lg" controlId="email">
                 <FontAwesomeIcon icon={faUser} className={styles.login__icon} />
                 <Form.Control
@@ -102,7 +102,7 @@ export default function Login() {
                 />
               </Form.Group>
             </div>
-            <div className={styles.login__field}>
+            <div className={`${styles.login__field} ${styles.non__draggable}`}>
             <FontAwesomeIcon icon={faLock} className={styles.login__icon} />
               <Form.Group size="lg" controlId="password">
                 <Form.Control
@@ -115,14 +115,14 @@ export default function Login() {
               </Form.Group>
             </div>
             {error && <p className={styles.incorrect__message}>Incorrect email or password.</p>}
-            <Button block size="lg" type="submit" disabled={!validateForm()} className={styles.login__submit}>
+            <Button block size="lg" type="submit" disabled={!validateForm()} className={`${styles.login__submit} ${styles.non__draggable}`}>
               <span className={styles.button__text}>Log In Now</span>
               <FontAwesomeIcon icon={faChevronRight} className={styles.button__icon} />
             </Button>
           </Form> 
           <p id="version" className={styles.version}>v{version}</p>
         </div>
-        <div className={`${styles.screen__background} ${styles.draggable}`}>
+        <div className={`${styles.screen__background}`}>
           <span className={`${styles.screen__background__shape} ${styles.screen__background__shape3}`}></span>		
           <span className={`${styles.screen__background__shape} ${styles.screen__background__shape2}`}></span>
           <span className={`${styles.screen__background__shape} ${styles.screen__background__shape1}`}></span>

@@ -9,7 +9,7 @@ export default function EndSessionModal(props) {
     const [endNote, setEndNote] = useState('');
 
     function endSession(endNote) {
-        props.endSession(endNote);
+        props.endSession(null, endNote);
     }
 
     return (    

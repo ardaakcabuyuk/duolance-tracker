@@ -121,12 +121,12 @@
 }
 
 .approved {
-    background: #93E1E1;
+    background: #40e4e4;
     border-radius: inherit;
 }
 
 .inprogress {
-    background: #fca95d;
+    background: #ffbc3f;
     border-radius: inherit;
 }
 

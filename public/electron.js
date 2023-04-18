@@ -124,3 +124,18 @@ ipcMain.handle('idle:get_idle_time', async(e, value) => {
     }
     return idleTime;
 });
+
+powerMonitor.on('suspend', () => {
+    win.webContents.send("system-state-change", "suspend");
+    console.log('The system is going to sleep');
+});
+
+powerMonitor.on('shutdown', () => {
+    win.webContents.send("system-state-change", "shutdown");
+    console.log('The system is going to shutdown');
+});
+
+powerMonitor.on('lock-screen', () => {
+    win.webContents.send("system-state-change", "lock-screen");
+    console.log('The system is going to lock screen');
+});
