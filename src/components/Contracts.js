@@ -15,6 +15,7 @@ import SearchBar from "./SearchBar";
 import LogoutButton from "./LogoutButton";
 import { calcPercentage } from '../utils/Utils';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function Contracts() {
@@ -63,7 +64,7 @@ export default function Contracts() {
             <div className={`${styles.header} ${styles.draggable}`}>
             </div> 
             <div className={`${styles.title} ${styles.draggable}`}>
-              <h1>Contracts</h1>
+              <h1 style={{fontWeight: 600}}>Contracts</h1>
             </div>
             <SearchBar 
               setSearchKey={setSearchKey}
@@ -79,14 +80,14 @@ export default function Contracts() {
                           <Card className={styles.card} onClick={() => handleContractClick(contract)}>
                             <Card.Body>
                               <div style={{float: "left"}}>
-                                <Card.Title>{contract.title}</Card.Title>   
+                                <Card.Title style={{fontWeight: '600'}}>{contract.title}</Card.Title>   
                                 <Card.Text>
-                                  Total hours: {Math.round(contract.totalHours * 10) / 10}
-                                  <br/>
-                                  Weekly hours: {Math.round(contract.weeklyHours * 10) / 10} / {contract.minWeeklyHour ? contract.minWeeklyHour : "Not set"}
+                                  <span>
+                                    <AccessTimeIcon sx={{ fontSize: 16 }}/>   <span style={{verticalAlign: 'middle'}}>{Math.round(contract.totalHours * 10) / 10} hrs</span>
+                                    </span>
                                 </Card.Text>
                               </div>
-                              <div style={{float: "right", height: 80, width: 80}}>
+                              <div style={{float: "right", height: 56, width: 56}}>
                                 <ChangingProgressProvider values={[0, calcPercentage(contract.weeklyHours, contract.minWeeklyHour)]}>
                                   {percentage => (
                                     <CircularProgressbar
@@ -104,7 +105,7 @@ export default function Contracts() {
                               </div>
                             </Card.Body>
                             <Card.Footer className="text-muted">
-                              <p className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
+                              <p style={{fontWeight: '600'}} className={contract.contractStatus === "Active" ? styles.status__active: styles.status__inactive}>{contract.contractStatus}</p>
                             </Card.Footer>
                           </Card>
                         </Col>

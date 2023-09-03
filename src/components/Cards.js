@@ -8,6 +8,10 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import styles from '../css/Cards.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { faChevronLeft, faPlus } from "@fortawesome/fontawesome-free-solid";
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -26,13 +30,16 @@ export default function Cards() {
 	const [searchKey, setSearchKey] = useState("");
 	const [showCreateCardModal, setShowCreateCardModal] = useState(false);
 	const statusPriority = [
-		'In Progress',
-		'Planned',
+		'In Progress',	
+		'Review',
 		'Approved',
-		'Open',
-		'Completed',
-		'Archived'
 	];
+
+	const statusIcon = {
+		'In Progress': <MoreHorizIcon />,
+		'Review': <TroubleshootIcon />,
+		'Approved': <ScatterPlotIcon />
+	}
 
 	function handleScroll(e) {
 		const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -218,7 +225,8 @@ export default function Cards() {
 				<div className={styles.title}>
 					<h1 style={{
 						marginLeft: "auto",
-						marginRight: "auto"
+						marginRight: "auto",
+						fontWeight: 600						
 					}}>Cards</h1>
 				</div>
 				<div className={styles.create__card}>
@@ -226,8 +234,7 @@ export default function Cards() {
 						className={styles.back__button} 
 						variant="outline-light" 
 						onClick={() => handleShowCreateCardModal()}>
-						<FontAwesomeIcon icon={faPlus} className={styles.button__icon} />
-						New
+						<FontAwesomeIcon icon={faPlus} />
 					</Button>
 				</div>
 			</div>
@@ -244,12 +251,14 @@ export default function Cards() {
 							<Card className={`${styles.card} ${styles[card.status.toLowerCase().replace(' ', '')]}`} onClick={() => handleCardClick(card)}>
 								<Card.Body style={{color: 'white'}}>
 								<div style={{float: "left"}}>
-									<Card.Title>{card.title}</Card.Title>   
+									<Card.Title style={{fontWeight: '600', fontSize: '18px'}}>{card.title}</Card.Title>   
 									<Card.Text>
-									Hours Worked: {(Math.round(card.hoursWorked * 10) / 10).toFixed(1)} / {card.hoursMin ? card.hoursMin.toFixed(1) : "Not set"}
+									<span>
+										<AccessTimeIcon sx={{ fontSize: 14 }}/>  <span style={{verticalAlign: 'middle', fontSize: '14px'}}>{(Math.round(card.hoursWorked * 10) / 10).toFixed(1)} hrs</span>
+									</span>	
 									</Card.Text>
 								</div>
-								<div style={{float: "right", height: 56, width: 56}}>
+								<div style={{float: "right", height: 56, width: 56, display: "flex"}}>
 									<ChangingProgressProvider values={[0, calcPercentage(card.hoursWorked, card.hoursMin)]}>
 									{percentage => (
 										<CircularProgressbar
@@ -258,7 +267,7 @@ export default function Cards() {
 										styles={buildStyles({
 											strokeLinecap: 'butt',
 											pathTransition: "stroke-dashoffset 0.5s ease 0s",
-											pathColor: `rgba(4, 201, 168)`,
+											pathColor: `#b5b5b5`,
 											textColor: '#ffffff',
 											trailColor: '#ffffff',
 											textSize: '25px',
@@ -268,11 +277,11 @@ export default function Cards() {
 									</ChangingProgressProvider>
 								</div>
 								</Card.Body>
-								<Card.Footer style={{color: 'white'}}>
-								{card.status} 
-								<p style={{float: "right", marginBottom: 0}}>
-									{timeLeft(card.dateDueFreelancer)}
-								</p>
+								<Card.Footer style={{color: 'white', fontWeight: '600'}}>		
+									<span>{statusIcon[card.status]}  {card.status}</span>
+									<span style={{float: "right", marginBottom: 0, verticalAlign: 'middle'}}>
+										{timeLeft(card.dateDueFreelancer)}
+									</span>
 								</Card.Footer>
 							</Card>
 							</Col>

@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;	
-	font-family: Maven Pro, sans-serif;
+	font-family: 'Montserrat', sans-serif;
 }
 
 .container {
@@ -121,12 +121,17 @@
 }
 
 .approved {
-    background: #40e4e4;
+    background: rgb(84, 225, 225);
     border-radius: inherit;
 }
 
 .inprogress {
-    background: #ffbc3f;
+    background:  rgba(252, 169, 93);
+    border-radius: inherit;
+}
+
+.review {
+    background: rgba(138, 43, 184, 0.8);
     border-radius: inherit;
 }
 
