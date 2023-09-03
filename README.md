@@ -2,6 +2,8 @@
 
 ## Requirements
 
+Node v20.3.1
+
 You should have PyInstaller installed in your computer, of course, alongside with Python.
 
 ## `pip install pyinstaller`
@@ -20,7 +22,6 @@ You may also see any lint errors in the console.
 ## `npm run start:dev `
 
 Runs the app in the production mode.
-
 
 ## Building the Application
 
